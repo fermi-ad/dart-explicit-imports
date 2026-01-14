@@ -1,0 +1,10 @@
+name: explicit_imports
+version: 0.0.1
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  analyzer:
+  analyzer_plugin:
+  custom_lint_builder:
