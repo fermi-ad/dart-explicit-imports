@@ -36,7 +36,10 @@ Add the plugin to your project’s **dev_dependencies** in `pubspec.yaml`:
 
 ```yaml
 dev_dependencies:
-  explicit_imports:
+  dart_explicit_imports:
+    git:
+      url: https://github.com/fermi-ad/dart-explicit-imports.git
+      ref: main
 ```
 
 ---
