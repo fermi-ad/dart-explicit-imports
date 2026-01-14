@@ -32,26 +32,15 @@ import 'package:foo/foo.dart' as foo show Foo;
 
 ## Installation
 
-Add the plugin to your project’s **dev_dependencies** in `pubspec.yaml`:
-
-```yaml
-dev_dependencies:
-  dart_explicit_imports:
-    git:
-      url: https://github.com/fermi-ad/dart-explicit-imports.git
-      ref: main
-```
-
----
-
-## Enable the plugin
-
-In your project’s `analysis_options.yaml`:
+Currently, since the plugin isn't yet published to a pub registry, you must clone the repo locally in order to use the plugin. After cloning, add the following to your `analysis_options.yaml`:
 
 ```yaml
 plugins:
   explicit_imports:
+    path: /path/to/dart-explicit-imports
 ```
+
+Then you should restart your Dart analysis server for the change to take effect.
 
 ---
 
