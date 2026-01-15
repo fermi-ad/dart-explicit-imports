@@ -5,7 +5,7 @@ A Dart **analyzer plugin** that enforces **explicit imports**.
 This plugin flags any `import` directive that does **not** use either:
 
 - a `show` combinator, or
-- as `as` prefix
+- an `as` prefix
 
 The goal is to reduce namespace pollution and make dependencies more explicit and readable.
 
