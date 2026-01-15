@@ -10,5 +10,6 @@ dependencies:
   analyzer: ^9.0.0
 
 dev_dependencies:
+  lints: ^6.0.0
   analyzer_testing: ^0.1.7
   test_reflective_loader: ^0.4.0
