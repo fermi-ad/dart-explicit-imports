@@ -100,11 +100,10 @@ class ExplicitFlutterImportsRule extends _ExplicitImportsBaseRule {
   ExplicitFlutterImportsRule()
     : super(
         code: code,
-        description:
-            'Flags package:flutter and package:flutter_test imports without "show" or "as".',
+        description: 'Flags package:flutter imports without "show" or "as".',
         appliesTo: (final uri) {
           final pkg = _packageName(uri);
-          return pkg == 'flutter' || pkg == 'flutter_test';
+          return pkg == 'flutter';
         },
       );
 }
@@ -125,7 +124,7 @@ class ExplicitPackageImportsRule extends _ExplicitImportsBaseRule {
         appliesTo: (final uri) {
           final pkg = _packageName(uri);
           if (pkg == null) return false;
-          if (pkg == 'flutter' || pkg == 'flutter_test') return false;
+          if (pkg == 'flutter') return false;
           return true;
         },
       );
