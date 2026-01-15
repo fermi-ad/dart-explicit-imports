@@ -4,6 +4,7 @@ import 'package:explicit_imports/src/explicit_imports.dart'
     show ExplicitFlutterImportsRule;
 import 'package:test_reflective_loader/test_reflective_loader.dart'
     show defineReflectiveSuite, defineReflectiveTests, reflectiveTest;
+import './common.dart' show ExplicitImportsSharedCases;
 
 void main() {
   defineReflectiveSuite(() {
@@ -12,7 +13,8 @@ void main() {
 }
 
 @reflectiveTest
-class ExplicitFlutterImportsTest extends AnalysisRuleTest {
+class ExplicitFlutterImportsTest extends AnalysisRuleTest
+    with ExplicitImportsSharedCases {
   @override
   void setUp() {
     // Stub out the `flutter` package so `package:flutter/widgets.dart` resolves.
@@ -36,50 +38,41 @@ void runApp() {}
 
   // ignore: non_constant_identifier_names
   void test_plain_flutter_import_is_linted() async {
-    const importStmt = "import 'package:flutter/widgets.dart';";
-    await assertDiagnostics(
-      '''
-$importStmt
-final _ = const Widget();
-''',
-      [lint(0, importStmt.length)],
+    await assertLinted(
+      "import 'package:flutter/widgets.dart';",
+      "final _ = const Widget();",
     );
   }
 
   // ignore: non_constant_identifier_names
   void test_flutter_import_with_as_is_ok() async {
-    await assertNoDiagnostics(r'''
-import 'package:flutter/widgets.dart' as w;
-final _ = const w.Widget();
-''');
+    await assertOk(
+      "import 'package:flutter/widgets.dart' as w;",
+      "final _ = const w.Widget();",
+    );
   }
 
   // ignore: non_constant_identifier_names
   void test_flutter_import_with_show_is_ok() async {
-    await assertNoDiagnostics(r'''
-import 'package:flutter/widgets.dart' show Widget;
-final _ = const Widget();
-''');
+    await assertOk(
+      "import 'package:flutter/widgets.dart' show Widget;",
+      "final _ = const Widget();",
+    );
   }
 
   // ignore: non_constant_identifier_names
   void test_flutter_import_with_as_and_show_is_ok() async {
-    await assertNoDiagnostics(r'''
-import 'package:flutter/widgets.dart' as w show Widget;
-final _ = const w.Widget();
-''');
+    await assertOk(
+      "import 'package:flutter/widgets.dart' as w show Widget;",
+      "final _ = const w.Widget();",
+    );
   }
 
   // ignore: non_constant_identifier_names
   void test_flutter_import_with_hide_only_is_linted() async {
-    const importStmt = "import 'package:flutter/widgets.dart' hide Widget;";
-    await assertDiagnostics(
-      '''
-$importStmt
-// Keep the file valid; don't reference Widget (it's hidden).
-final _ = runApp;
-''',
-      [lint(0, importStmt.length)],
+    await assertLinted(
+      "import 'package:flutter/widgets.dart' hide Widget;",
+      "final _ = runApp;",
     );
   }
 }
