@@ -33,7 +33,13 @@ import 'package:foo/foo.dart' as foo show Foo;
 
 ## Installation
 
-Currently, since the plugin isn't yet published to a pub registry, **you must clone the repo locally** in order to use the plugin. After cloning, add the following to your `analysis_options.yaml`:
+Currently, since the plugin isn't yet published to a pub registry, **you must clone the repo locally** in order to use the plugin:
+
+```bash
+$ git clone https://github.com/fermi-ad/dart-explicit-imports.git
+```
+
+After cloning, add the following to your `analysis_options.yaml`:
 
 ```yaml
 plugins:
