@@ -7,51 +7,142 @@ import 'package:analyzer/dart/ast/ast.dart'
 import 'package:analyzer/error/error.dart' show LintCode;
 import 'package:analyzer/dart/ast/visitor.dart' show SimpleAstVisitor;
 
-class ExplicitImportsRule extends AnalysisRule {
-  static const LintCode code = LintCode(
-    'explicit_imports',
-    'Imports must use either a "show" combinator or an "as" prefix.',
-    correctionMessage:
-        "Add an import prefix (as ...) or restrict imports with show.",
-  );
+typedef ImportFilter = bool Function(String uri);
 
-  ExplicitImportsRule()
-    : super(
-        name: code.name,
-        description:
-            'Flags imports that do not use an "as" prefix or do not restrict symbols with "show".',
-      );
+abstract class _ExplicitImportsBaseRule extends AnalysisRule {
+  final LintCode _code;
+  final ImportFilter _appliesTo;
+
+  _ExplicitImportsBaseRule({
+    required final LintCode code,
+    required super.description,
+    required final ImportFilter appliesTo,
+  }) : _code = code,
+       _appliesTo = appliesTo,
+       super(name: code.name);
 
   @override
-  LintCode get diagnosticCode => code;
+  LintCode get diagnosticCode => _code;
 
   @override
   void registerNodeProcessors(
-    RuleVisitorRegistry registry,
-    RuleContext context,
+    final RuleVisitorRegistry registry,
+    final RuleContext context,
   ) {
-    var visitor = _Visitor(this, context);
-    registry.addImportDirective(this, visitor);
+    registry.addImportDirective(this, _Visitor(this, _appliesTo));
   }
 }
 
 class _Visitor extends SimpleAstVisitor<void> {
   final AnalysisRule rule;
-  final RuleContext context;
+  final ImportFilter appliesTo;
 
-  _Visitor(this.rule, this.context);
+  _Visitor(this.rule, this.appliesTo);
 
   @override
-  void visitImportDirective(ImportDirective node) {
+  void visitImportDirective(final ImportDirective node) {
+    final uri = node.uri.stringValue;
+    if (uri == null) return;
+    if (!appliesTo(uri)) return;
+
     final hasAsPrefix = node.prefix != null;
+    final hasShow = node.combinators.any((final c) => c is ShowCombinator);
 
-    // `combinators` includes ShowCombinator / HideCombinator.
-    final hasShow = node.combinators.any((c) => c is ShowCombinator);
-
-    // Flag if neither "as" nor "show" is present.
     if (!hasAsPrefix && !hasShow) {
-      // Highlight the whole directive (simple + works well in IDEs).
       rule.reportAtNode(node);
     }
   }
+}
+
+// -------- Helpers --------
+
+String? _packageName(final String uri) {
+  if (!uri.startsWith('package:')) return null;
+  final rest = uri.substring('package:'.length);
+  final slash = rest.indexOf('/');
+  return slash == -1 ? rest : rest.substring(0, slash);
+}
+
+bool _isRelative(final String uri) {
+  // Covers `import 'foo.dart';`, `./foo.dart`, `../foo.dart`
+  // (Any URI with no scheme and not starting with package:/dart:/file:)
+  final hasScheme = uri.contains(':'); // e.g. dart:, package:, file:
+  if (hasScheme) return false;
+  return true;
+}
+
+// -------- Concrete rules --------
+
+class ExplicitDartImportsRule extends _ExplicitImportsBaseRule {
+  static const LintCode code = LintCode(
+    'explicit_dart_imports',
+    'Dart SDK imports must use either a "show" combinator or an "as" prefix.',
+    correctionMessage:
+        'Restrict imports with show, or add an import prefix (as ...).',
+  );
+
+  ExplicitDartImportsRule()
+    : super(
+        code: code,
+        description: 'Flags dart: imports without "show" or "as".',
+        appliesTo: (final uri) => uri.startsWith('dart:'),
+      );
+}
+
+class ExplicitFlutterImportsRule extends _ExplicitImportsBaseRule {
+  static const LintCode code = LintCode(
+    'explicit_flutter_imports',
+    'Flutter imports must use either a "show" combinator or an "as" prefix.',
+    correctionMessage:
+        'Restrict imports with show, or add an import prefix (as ...).',
+  );
+
+  ExplicitFlutterImportsRule()
+    : super(
+        code: code,
+        description:
+            'Flags package:flutter and package:flutter_test imports without "show" or "as".',
+        appliesTo: (final uri) {
+          final pkg = _packageName(uri);
+          return pkg == 'flutter' || pkg == 'flutter_test';
+        },
+      );
+}
+
+class ExplicitPackageImportsRule extends _ExplicitImportsBaseRule {
+  static const LintCode code = LintCode(
+    'explicit_package_imports',
+    'Package imports must use either a "show" combinator or an "as" prefix.',
+    correctionMessage:
+        'Restrict imports with show, or add an import prefix (as ...).',
+  );
+
+  ExplicitPackageImportsRule()
+    : super(
+        code: code,
+        description:
+            'Flags non-Flutter package: imports without "show" or "as".',
+        appliesTo: (final uri) {
+          final pkg = _packageName(uri);
+          if (pkg == null) return false;
+          if (pkg == 'flutter' || pkg == 'flutter_test') return false;
+          return true;
+        },
+      );
+}
+
+class ExplicitRelativeImportsRule extends _ExplicitImportsBaseRule {
+  static const LintCode code = LintCode(
+    'explicit_relative_imports',
+    'Relative imports must use either a "show" combinator or an "as" prefix.',
+    correctionMessage:
+        'Restrict imports with show, or add an import prefix (as ...).',
+  );
+
+  ExplicitRelativeImportsRule()
+    : super(
+        code: code,
+        description: 'Flags relative imports without "show" or "as".',
+        appliesTo: _isRelative,
+      );
 }
