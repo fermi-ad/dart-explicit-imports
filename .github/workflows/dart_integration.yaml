@@ -34,7 +34,12 @@ jobs:
       - name: Analyze code
         run: dart analyze --fatal-infos
 
+      - name: Run tests
+        if: matrix.sdk != '3.10.0'
+        run: dart test
+
       - name: Run tests with coverage
+        if: matrix.sdk == '3.10.0'
         run: |
           dart pub global activate coverage
           dart test --coverage=coverage
@@ -47,6 +52,7 @@ jobs:
 
       - name: Generate coverage report 
         uses: fermi-ad/code-coverage-reporter@v1.1.2
+        if: matrix.sdk == '3.10.0'
         with:
           include_pattern: ^.*\.dart$
           exclude_pattern: test/|\.dart_tool/|tool/
