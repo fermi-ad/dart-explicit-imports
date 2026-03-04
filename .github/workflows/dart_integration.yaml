@@ -1,0 +1,58 @@
+name: Dart CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    strategy:
+      matrix:
+        sdk: [3.10.0, 3.10.9, stable]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ matrix.sdk }}
+
+      - name: Install dependencies
+        run: dart pub get
+
+      - name: Verify formatting
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Analyze code
+        run: dart analyze --fatal-infos
+
+      - name: Run tests
+        if: matrix.sdk != '3.10.0'
+        run: dart test
+
+      - name: Run tests with coverage
+        if: matrix.sdk == '3.10.0'
+        run: |
+          dart pub global activate coverage
+          dart test --coverage=coverage
+          dart pub global run coverage:format_coverage \
+          --lcov \
+          --in=coverage \
+          --out=coverage/lcov.info \
+          --report-on=lib \
+          --base-directory=$(pwd)
+
+      - name: Generate coverage report 
+        uses: fermi-ad/code-coverage-reporter@v1.1.2
+        if: matrix.sdk == '3.10.0'
+        with:
+          include_pattern: ^.*\.dart$
+          exclude_pattern: test/|\.dart_tool/|tool/
