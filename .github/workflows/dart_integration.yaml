@@ -34,10 +34,15 @@ jobs:
         run: |
           dart pub global activate coverage
           dart test --coverage=coverage
-          dart pub global run coverage:format_coverage --lcov --in=coverage --out=coverage/lcov.info --report-on=lib
+          dart pub global run coverage:format_coverage \
+          --lcov \
+          --in=coverage \
+          --out=coverage/lcov.info \
+          --report-on=lib \
+          --base-directory=$(pwd)
 
       - name: Generate coverage report 
         uses: fermi-ad/code-coverage-reporter@v1.1.2
         with:
           include_pattern: ^.*\.dart$
-          exclude_pattern: test/|\.dart_tool/
+          exclude_pattern: test/|\.dart_tool/|tool/
