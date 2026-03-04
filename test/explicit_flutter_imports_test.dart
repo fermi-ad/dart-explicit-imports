@@ -17,19 +17,17 @@ class ExplicitFlutterImportsTest extends AnalysisRuleTest
     with ExplicitImportsSharedCases {
   @override
   void setUp() {
-    // Stub out the `flutter` package so `package:flutter/widgets.dart` resolves.
-    //
-    // Per the docs:
-    // - call newPackage in setUp
-    // - do it before super.setUp()
-    // - stubs can be minimal (bodies/types simplified)
-    // :contentReference[oaicite:1]{index=1}
     newPackage('flutter').addFile('lib/widgets.dart', r'''
 class Widget {
   const Widget();
 }
 
 void runApp() {}
+''');
+
+    newPackage('flutter_test').addFile('lib/flutter_test.dart', r'''
+void testWidgets(String description, dynamic Function() callback) {}
+void setUp(dynamic Function() callback) {}
 ''');
 
     rule = ExplicitFlutterImportsRule();
@@ -73,6 +71,46 @@ void runApp() {}
     await assertLinted(
       "import 'package:flutter/widgets.dart' hide Widget;",
       "final _ = runApp;",
+    );
+  }
+
+  // ignore: non_constant_identifier_names
+  void test_plain_flutter_test_import_is_linted() async {
+    await assertLinted(
+      "import 'package:flutter_test/flutter_test.dart';",
+      "final _ = testWidgets;",
+    );
+  }
+
+  // ignore: non_constant_identifier_names
+  void test_flutter_test_import_with_show_is_ok() async {
+    await assertOk(
+      "import 'package:flutter_test/flutter_test.dart' show testWidgets;",
+      "final _ = testWidgets;",
+    );
+  }
+
+  // ignore: non_constant_identifier_names
+  void test_flutter_test_import_with_as_is_ok() async {
+    await assertOk(
+      "import 'package:flutter_test/flutter_test.dart' as ft;",
+      "final _ = ft.testWidgets;",
+    );
+  }
+
+  // ignore: non_constant_identifier_names
+  void test_flutter_test_import_with_as_and_show_is_ok() async {
+    await assertOk(
+      "import 'package:flutter_test/flutter_test.dart' as ft show testWidgets;",
+      "final _ = ft.testWidgets;",
+    );
+  }
+
+  // ignore: non_constant_identifier_names
+  void test_flutter_test_import_with_hide_only_is_linted() async {
+    await assertLinted(
+      "import 'package:flutter_test/flutter_test.dart' hide testWidgets;",
+      "final _ = setUp;",
     );
   }
 }

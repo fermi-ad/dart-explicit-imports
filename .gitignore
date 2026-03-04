@@ -17,3 +17,7 @@ doc/api/
 *.dart.js
 # Produced by the --dump-info flag.
 *.info.json
+
+# Claude Code
+CLAUDE.md
+.claude/
