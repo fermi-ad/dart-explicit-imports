@@ -1,5 +1,14 @@
 name: explicit_imports
-version: 0.0.1
+version: 1.0.0
+description: Dart analyzer lint plugin that enforces explicit imports--any "import" directive that doesn't use either "show" or "as".
+repository: https://github.com/fermi-ad/dart-explicit-imports
+
+topics:
+  - custom-lint
+  - analysis
+  - analyzer
+  - plugin
+  - imports
 
 environment:
   sdk: ^3.10.0
