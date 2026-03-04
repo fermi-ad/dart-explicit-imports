@@ -13,3 +13,9 @@ dev_dependencies:
   lints: ^6.0.0
   analyzer_testing: ^0.1.7
   test_reflective_loader: ^0.4.0
+  dart_pre_commit: ^6.1.0
+
+dart_pre_commit:
+  analyze:
+    ignore-unstaged-files: true
+  outdated: false
