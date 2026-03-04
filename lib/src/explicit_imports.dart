@@ -100,10 +100,11 @@ class ExplicitFlutterImportsRule extends _ExplicitImportsBaseRule {
   ExplicitFlutterImportsRule()
     : super(
         code: code,
-        description: 'Flags package:flutter imports without "show" or "as".',
+        description:
+            'Flags package:flutter and package:flutter_test imports without "show" or "as".',
         appliesTo: (final uri) {
           final pkg = _packageName(uri);
-          return pkg == 'flutter';
+          return pkg == 'flutter' || pkg == 'flutter_test';
         },
       );
 }

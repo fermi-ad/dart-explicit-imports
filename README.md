@@ -68,7 +68,7 @@ All rules share the same behavior: the import must include either a `show` combi
 Applies to core `dart:` imports.
 
 ### `explicit_flutter_imports`
-Applies to Flutter imports (`package:flutter/...`).
+Applies to Flutter imports (`package:flutter/...` and `package:flutter_test/...`).
 
 ### `explicit_package_imports`
 Applies to all other (i.e. non-Flutter) `package:` imports.
