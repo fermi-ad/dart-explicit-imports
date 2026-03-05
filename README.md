@@ -11,26 +11,6 @@ The goal is to reduce namespace pollution and make dependencies more explicit an
 
 ---
 
-## What it flags
-
-❌ **Linted**
-```dart
-import 'dart:math';
-import 'package:foo/foo.dart' hide Bar;
-```
-
-✅ **Allowed**
-```dart
-import 'dart:math' show Random;
-import 'dart:math' show Random, pi;
-import 'dart:math' as math;
-import 'package:foo/foo.dart' as foo show Foo;
-```
-
-> Note: `hide` **does not** count as explicit. Only `show` or `as` satisfies the rule.
-
----
-
 ## Installation
 
 Add `explicit_imports` to `analysis_options.yaml` under a top-level `plugins` section:
@@ -49,6 +29,26 @@ plugins:
 Then **restart your Dart analysis server (or IDE)** for the change to take effect.
 
 > Note: You do **not** need to add `explicit_imports` to your `pubspec.yaml`.
+
+---
+
+## What it flags
+
+❌ **Linted**
+```dart
+import 'dart:math';
+import 'package:foo/foo.dart' hide Bar;
+```
+
+✅ **Allowed**
+```dart
+import 'dart:math' show Random;
+import 'dart:math' show Random, pi;
+import 'dart:math' as math;
+import 'package:foo/foo.dart' as foo show Foo;
+```
+
+> Note: `hide` **does not** count as explicit. Only `show` or `as` satisfies the rule.
 
 ---
 
@@ -83,15 +83,6 @@ To suppress a diagnostic on a particular import, add an `// ignore:` comment abo
 import 'dart:math';
 // ignore: explicit_imports/explicit_package_imports
 import 'package:foo/foo.dart';
-```
-
----
-
-## Development
-
-### Run tests
-```bash
-dart test
 ```
 
 ---
