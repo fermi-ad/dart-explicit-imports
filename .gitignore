@@ -18,6 +18,13 @@ doc/api/
 # Produced by the --dump-info flag.
 *.info.json
 
+# VS Code settings
+.vscode/
+
 # Claude Code
 CLAUDE.md
 .claude/
+
+# FVM Version Cache
+.fvm/
+.fvmrc
