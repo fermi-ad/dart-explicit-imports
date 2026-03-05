@@ -46,7 +46,9 @@ plugins:
       explicit_relative_imports: true
 ```
 
-Then **restart your Dart analysis server (or IDE)** for the changes to take effect.
+Then **restart your Dart analysis server (or IDE)** for the change to take effect.
+
+> Note: You do **not** need to add `explicit_imports` to your `pubspec.yaml`.
 
 ---
 

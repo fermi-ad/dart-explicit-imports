@@ -2,6 +2,7 @@
 
 * Fixed bug where the explicit_package_imports rule would erroneously lint the flutter_test package.
 * Updated README with instructions for ignoring diagnostics on a particular import.
+* Updated README clarifying that you don't have to add the package to pubspec.yaml.
 
 # 1.0.3
 
