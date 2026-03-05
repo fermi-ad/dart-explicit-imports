@@ -124,8 +124,9 @@ class ExplicitPackageImportsRule extends _ExplicitImportsBaseRule {
             'Flags non-Flutter package: imports without "show" or "as".',
         appliesTo: (final uri) {
           final pkg = _packageName(uri);
-          if (pkg == null) return false;
-          if (pkg == 'flutter') return false;
+          if (pkg == null || pkg == 'flutter' || pkg == 'flutter_test') {
+            return false;
+          }
           return true;
         },
       );
