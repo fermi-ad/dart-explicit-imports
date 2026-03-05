@@ -4,7 +4,12 @@ import 'package:explicit_imports/src/explicit_imports.dart'
     show ExplicitRelativeImportsRule;
 import 'package:test_reflective_loader/test_reflective_loader.dart'
     show defineReflectiveSuite, defineReflectiveTests, reflectiveTest;
-import './common.dart' show ExplicitImportsSharedCases;
+import './common.dart'
+    show
+        DartImportOutOfScopeCase,
+        ExplicitImportsSharedCases,
+        FlutterImportOutOfScopeCase,
+        PackageImportOutOfScopeCase;
 
 void main() {
   defineReflectiveSuite(() {
@@ -14,7 +19,11 @@ void main() {
 
 @reflectiveTest
 class ExplicitRelativeImportsTest extends AnalysisRuleTest
-    with ExplicitImportsSharedCases {
+    with
+        ExplicitImportsSharedCases,
+        DartImportOutOfScopeCase,
+        FlutterImportOutOfScopeCase,
+        PackageImportOutOfScopeCase {
   @override
   void setUp() {
     // Create a local library the test file can import relatively.
@@ -61,10 +70,5 @@ const int fooValue = 1;
     // Linted because it's neither `show` nor `as`.
     // Usage must not reference the hidden symbol.
     await assertLinted(_relImportHideOnly, 'final _ = fooValue;');
-  }
-
-  // ignore: non_constant_identifier_names
-  void test_out_of_scope_dart_import_is_not_linted() async {
-    await assertOk("import 'dart:math';", 'final _ = Random();');
   }
 }

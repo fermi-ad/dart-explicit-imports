@@ -4,7 +4,12 @@ import 'package:explicit_imports/src/explicit_imports.dart'
     show ExplicitDartImportsRule;
 import 'package:test_reflective_loader/test_reflective_loader.dart'
     show defineReflectiveSuite, defineReflectiveTests, reflectiveTest;
-import './common.dart' show ExplicitImportsSharedCases;
+import './common.dart'
+    show
+        ExplicitImportsSharedCases,
+        FlutterImportOutOfScopeCase,
+        PackageImportOutOfScopeCase,
+        RelativeImportOutOfScopeCase;
 
 void main() {
   defineReflectiveSuite(() {
@@ -14,7 +19,11 @@ void main() {
 
 @reflectiveTest
 class ExplicitDartImportsTest extends AnalysisRuleTest
-    with ExplicitImportsSharedCases {
+    with
+        ExplicitImportsSharedCases,
+        FlutterImportOutOfScopeCase,
+        PackageImportOutOfScopeCase,
+        RelativeImportOutOfScopeCase {
   @override
   String get analysisRule => 'explicit_dart_imports';
 
@@ -22,14 +31,6 @@ class ExplicitDartImportsTest extends AnalysisRuleTest
   void setUp() {
     rule = ExplicitDartImportsRule();
     super.setUp();
-
-    // Stub a package library inside the synthetic test package ("test") so we
-    // can verify "out-of-scope package imports are not linted".
-    newFile('$testPackageLibPath/api.dart', r'''
-class Api {
-  const Api();
-}
-''');
   }
 
   // ignore: non_constant_identifier_names
@@ -58,10 +59,5 @@ class Api {
   // ignore: non_constant_identifier_names
   void test_import_with_hide_only_is_linted() async {
     await assertLinted("import 'dart:math' hide Random;", 'final _ = pi;');
-  }
-
-  // ignore: non_constant_identifier_names
-  void test_out_of_scope_package_import_is_not_linted() async {
-    await assertOk("import 'package:test/api.dart';", 'final _ = const Api();');
   }
 }

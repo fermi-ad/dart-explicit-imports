@@ -4,7 +4,12 @@ import 'package:explicit_imports/src/explicit_imports.dart'
     show ExplicitFlutterImportsRule;
 import 'package:test_reflective_loader/test_reflective_loader.dart'
     show defineReflectiveSuite, defineReflectiveTests, reflectiveTest;
-import './common.dart' show ExplicitImportsSharedCases;
+import './common.dart'
+    show
+        DartImportOutOfScopeCase,
+        ExplicitImportsSharedCases,
+        PackageImportOutOfScopeCase,
+        RelativeImportOutOfScopeCase;
 
 void main() {
   defineReflectiveSuite(() {
@@ -14,7 +19,11 @@ void main() {
 
 @reflectiveTest
 class ExplicitFlutterImportsTest extends AnalysisRuleTest
-    with ExplicitImportsSharedCases {
+    with
+        ExplicitImportsSharedCases,
+        DartImportOutOfScopeCase,
+        PackageImportOutOfScopeCase,
+        RelativeImportOutOfScopeCase {
   @override
   void setUp() {
     newPackage('flutter').addFile('lib/widgets.dart', r'''

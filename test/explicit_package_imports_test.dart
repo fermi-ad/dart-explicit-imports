@@ -4,7 +4,12 @@ import 'package:explicit_imports/src/explicit_imports.dart'
     show ExplicitPackageImportsRule;
 import 'package:test_reflective_loader/test_reflective_loader.dart'
     show defineReflectiveSuite, defineReflectiveTests, reflectiveTest;
-import './common.dart' show ExplicitImportsSharedCases;
+import './common.dart'
+    show
+        DartImportOutOfScopeCase,
+        ExplicitImportsSharedCases,
+        FlutterImportOutOfScopeCase,
+        RelativeImportOutOfScopeCase;
 
 void main() {
   defineReflectiveSuite(() {
@@ -14,7 +19,11 @@ void main() {
 
 @reflectiveTest
 class ExplicitPackageImportsTest extends AnalysisRuleTest
-    with ExplicitImportsSharedCases {
+    with
+        ExplicitImportsSharedCases,
+        DartImportOutOfScopeCase,
+        FlutterImportOutOfScopeCase,
+        RelativeImportOutOfScopeCase {
   @override
   String get analysisRule => 'explicit_package_imports';
 
@@ -72,10 +81,5 @@ const int apiVersion = 1;
       "import 'package:test/api.dart' hide Api;",
       'final _ = apiVersion;',
     );
-  }
-
-  // ignore: non_constant_identifier_names
-  void test_out_of_scope_dart_import_is_not_linted() async {
-    await assertOk("import 'dart:math';", 'final _ = Random();');
   }
 }
