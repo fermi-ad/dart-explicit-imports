@@ -33,17 +33,12 @@ import 'package:foo/foo.dart' as foo show Foo;
 
 ## Installation
 
-Add `explicit_imports` to your `pubspec.yaml` dev dependencies:
-
-```bash
-dart pub add dev:explicit_imports
-```
-
-Then add the following to your `analysis_options.yaml`:
+Add `explicit_imports` to `analysis_options.yaml` under a top-level `plugins` section:
 
 ```yaml
 plugins:
   explicit_imports:
+    version: ^1.0.3
     diagnostics:
       explicit_dart_imports: true
       explicit_flutter_imports: true

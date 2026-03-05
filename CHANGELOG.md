@@ -1,3 +1,7 @@
+# 1.0.3
+
+* Corrected README installation instructions.
+
 # 1.0.2
 
 * Updated README installation instructions.
