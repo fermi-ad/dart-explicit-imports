@@ -1,3 +1,8 @@
+# 1.0.4
+
+* Fixed bug where the explicit_package_imports rule would erroneously lint the flutter_test package.
+* Updated README with instructions for ignoring diagnostics on a particular import.
+
 # 1.0.3
 
 * Corrected README installation instructions.
