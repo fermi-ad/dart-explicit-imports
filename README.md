@@ -72,6 +72,19 @@ Applies to relative imports (e.g. `import 'foo.dart';`, `./foo.dart`, `../foo.da
 
 ---
 
+## Ignoring rules
+
+To suppress a diagnostic on a particular import, add an `// ignore:` comment above the import with the relevant rule name:
+
+```dart
+// ignore: explicit_imports/explicit_dart_imports
+import 'dart:math';
+// ignore: explicit_imports/explicit_package_imports
+import 'package:foo/foo.dart';
+```
+
+---
+
 ## Development
 
 ### Run tests
