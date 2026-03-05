@@ -33,18 +33,17 @@ import 'package:foo/foo.dart' as foo show Foo;
 
 ## Installation
 
-Currently, since the plugin isn't yet published to a pub registry, **you must clone the repo locally** in order to use the plugin:
+Add `explicit_imports` to your `pubspec.yaml` dev dependencies:
 
 ```bash
-$ git clone https://github.com/fermi-ad/dart-explicit-imports.git
+dart pub add dev:explicit_imports
 ```
 
-After cloning, add the following to your `analysis_options.yaml`:
+Then add the following to your `analysis_options.yaml`:
 
 ```yaml
 plugins:
   explicit_imports:
-    path: /path/to/dart-explicit-imports
     diagnostics:
       explicit_dart_imports: true
       explicit_flutter_imports: true
@@ -89,7 +88,7 @@ dart test
 
 ## Motivation
 
-Explicit imports:
+Explicit imports
 - make APIs easier to reason about
 - reduce accidental name conflicts
 - improve long-term maintainability of large Dart and Flutter codebases
