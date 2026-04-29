@@ -134,7 +134,11 @@ class AddShowCombinator extends ResolvedCorrectionProducer {
     if (namespaceMap.isEmpty) return;
 
     // Build a reverse map: element object → exported name.
-    // Skip dotted entries (e.g. "Foo.bar") – we only care about top-level names.
+    // Skip dotted entries such as "ClassName.staticMember" – the namespace
+    // contains both "ClassName" (the type itself) and "ClassName.member"
+    // (its static members) as separate keys.  We only care about the
+    // top-level name so that the show clause lists "ClassName" rather than
+    // "ClassName.member" for each static member.
     final elementToName = <Element, String>{};
     for (final entry in namespaceMap.entries) {
       if (!entry.key.contains('.')) {
@@ -168,7 +172,8 @@ class AddShowCombinator extends ResolvedCorrectionProducer {
       }
 
       // If the element is a member of an *unnamed* extension from the imported
-      // library we cannot produce a valid show clause.
+      // library we cannot produce a valid show clause: unnamed extensions have
+      // no identifier and therefore cannot appear in a `show` combinator.
       if (enclosing is ExtensionElement && enclosing.name == null) {
         final importedLibrary = libraryImport.importedLibrary;
         if (importedLibrary != null &&

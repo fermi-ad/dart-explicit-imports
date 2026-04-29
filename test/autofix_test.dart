@@ -97,8 +97,9 @@ mixin _FixTestMixin on AnalysisRuleTest {
     result = await resolveFile(convertPath(testFile.path));
 
     final lintDiagnostics =
-        result.diagnostics.where((final d) => d.diagnosticCode.name == rule.name);
-    if (lintDiagnostics.isEmpty) return; // No lint – nothing to fix.
+        result.diagnostics.where((final d) => d.diagnosticCode.name == rule.name).toList();
+    expect(lintDiagnostics, isNotEmpty,
+        reason: 'Expected the lint "${rule.name}" to fire');
 
     final diagnostic = lintDiagnostics.first;
     final session = result.session;
