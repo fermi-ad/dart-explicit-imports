@@ -2,6 +2,7 @@ import 'package:analysis_server_plugin/plugin.dart' show Plugin;
 import 'package:analysis_server_plugin/registry.dart' show PluginRegistry;
 import 'src/explicit_imports.dart'
     show
+        AddShowCombinator,
         ExplicitDartImportsRule,
         ExplicitFlutterImportsRule,
         ExplicitPackageImportsRule,
@@ -19,5 +20,21 @@ class ExplicitImportsPlugin extends Plugin {
     registry.registerLintRule(ExplicitFlutterImportsRule());
     registry.registerLintRule(ExplicitPackageImportsRule());
     registry.registerLintRule(ExplicitRelativeImportsRule());
+    registry.registerFixForRule(
+      ExplicitDartImportsRule.code,
+      AddShowCombinator.new,
+    );
+    registry.registerFixForRule(
+      ExplicitFlutterImportsRule.code,
+      AddShowCombinator.new,
+    );
+    registry.registerFixForRule(
+      ExplicitPackageImportsRule.code,
+      AddShowCombinator.new,
+    );
+    registry.registerFixForRule(
+      ExplicitRelativeImportsRule.code,
+      AddShowCombinator.new,
+    );
   }
 }
